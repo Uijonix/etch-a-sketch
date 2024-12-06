@@ -11,12 +11,7 @@ body {
   align-items: center;
   min-height: 100vh;
   padding: 10px 15px;
-  background: linear-gradient(#fcd1ab, rgba(172, 219, 252, 0.987));
-}
-
-.game-lable-container {
-  align-self: flex-start;
-  position: relative;
+  background: linear-gradient(rgb(252, 209, 171), rgba(172, 219, 252, 0.987));
 }
 
 h1 {
@@ -25,17 +20,15 @@ h1 {
   text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
   padding: 5px 10px;
-  width: 150px;
+  align-self: flex-start;
+  position: relative;
   text-align: center;
   border-radius: 30px;
   margin-bottom: 15px;
 }
 
 .grid-size {
-  position: absolute;
-  right: -50px;
-  top: 35px;
-  background-color: rgb(255, 255, 255);
+  background-color: gray;
   padding: 10px;
   border-radius: 20px;
   font-size: 18px;
@@ -79,6 +72,7 @@ h1 {
   border: none;
   cursor: pointer;
   font-family: system-ui;
+  background-color: white;
   font-style: italic;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
 }

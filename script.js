@@ -3,52 +3,47 @@
 // === DOM References ===
 
 const container = document.querySelector(".container");
+const gridSizedisplay = document.querySelector(".grid-size");
 const generateNewGridBtn = document.querySelector(".generate-new-grid-button");
 const modificationButtonsContainer = document.querySelector(
   ".modification-buttons-container"
 );
+const randomColorBtn = modificationButtonsContainer.children[0];
+const darkenColorBtn = modificationButtonsContainer.children[1];
+
+let gridSize = 16;
+let isRandomActive = false;
+let isDarkenColorOn = false;
+
+randomColorBtn.addEventListener("click", () => {
+  isRandomActive = !isRandomActive;
+  randomColorBtn.style.backgroundColor = isRandomActive
+    ? "rgb(252, 209, 171)"
+    : "rgb(255, 255, 255)";
+  randomColorBtn.textContent = isRandomActive
+    ? "Random Colors: ON"
+    : "Random Colors";
+});
 
 // === Event Handlers ===
 
 document.addEventListener("DOMContentLoaded", () => {
-  createSquares();
+  createSquares(gridSize);
 });
 
 generateNewGridBtn.addEventListener("click", () => {
   handleNewGrid();
 });
 
-// Adds the default event handler
-let currentHandler = makeSquaresBlack;
-
-modificationButtonsContainer.addEventListener("click", (e) => {
-  const buttonClicked = e.target.id;
-
-  // Ensure the clicked element is a valid button with a handler
-  if (
-    buttonClicked === "random-color-button" &&
-    currentHandler !== randomizeSquareColors
-  ) {
-    container.removeEventListener("mouseover", currentHandler);
-    currentHandler = randomizeSquareColors;
-    container.addEventListener("mouseover", currentHandler);
-  } else if (
-    buttonClicked === "darken-color-button" &&
-    currentHandler !== darkenSquaresColors
-  ) {
-    container.removeEventListener("mouseover", currentHandler);
-    currentHandler = darkenSquaresColors;
-    container.addEventListener("mouseover", currentHandler);
-  }
+container.addEventListener("mouseover", (e) => {
+  if (isRandomActive === false) makeSquaresBlack(e);
+  if (isRandomActive) randomizeSquareColors(e);
 });
-
-container.addEventListener("mouseover", currentHandler);
 
 // === Functions Or Helper Functions ===
 
-// Creates 16x16 without argument (uses a default parameter)
-function createSquares(sqr = 16) {
-  let totalSquares = sqr * sqr;
+function createSquares(sqr) {
+  let totalSquares = sqr ** 2;
 
   for (let i = 0; i < totalSquares; i++) {
     const div = document.createElement("div");
@@ -59,6 +54,12 @@ function createSquares(sqr = 16) {
 
     container.appendChild(div);
   }
+
+  gridSize = sqr;
+}
+
+function updatedGridDisplay() {
+  gridSizedisplay.textContent = `${gridSize}x${gridSize}`;
 }
 
 // Gets data to create new grid from user
@@ -81,17 +82,11 @@ function handleNewGrid() {
     }
   } while (isNaN(squaresPerSide) || squaresPerSide < 1 || squaresPerSide > 100);
 
-  clearContainer();
+  container.replaceChildren();
 
   createSquares(squaresPerSide);
-}
 
-// Clears grid when called
-function clearContainer() {
-  const allSquares = getAllSquares();
-  allSquares.forEach((square) => {
-    square.remove();
-  });
+  updatedGridDisplay();
 }
 
 // Fetches the latest list of all square divs
