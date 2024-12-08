@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: system-ui;
+  font-family: system-ui, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,26 +14,26 @@ body {
   background: linear-gradient(rgb(252, 209, 171), rgba(172, 219, 252, 0.987));
 }
 
-h1 {
-  font-style: italic;
-  color: white;
-  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
-  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
-  padding: 5px 10px;
+.game-label {
   align-self: flex-start;
-  position: relative;
-  text-align: center;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
   border-radius: 30px;
+  position: relative;
+  color: white;
   margin-bottom: 15px;
+  text-align: center;
+  padding: 5px 10px;
+  font-style: italic;
 }
 
 .grid-size {
   background-color: gray;
   padding: 10px;
+  display: block;
   border-radius: 20px;
   font-size: 18px;
   font-weight: bold;
-  font-style: italic;
 }
 
 .generate-new-grid-cont {
@@ -45,7 +45,7 @@ h1 {
 }
 
 .container {
-  width: 450px;
+  width: 440px;
   height: 450px;
   border-radius: 10px;
   border: 40px solid rgb(182, 56, 56);
@@ -63,7 +63,7 @@ h1 {
 }
 
 .generate-new-grid-button,
-.modification-buttons-container button {
+.modifications-container button {
   font-size: 16px;
   font-weight: 700;
   padding: 10px 15px;
@@ -77,6 +77,11 @@ h1 {
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
 }
 
-.modification-buttons-container {
+.modifications-container {
   pointer-events: none;
+}
+
+#random-color-button.active,
+#darken-color-button.active {
+  background-color: rgb(252, 209, 171);
 }

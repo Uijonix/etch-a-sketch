@@ -9,29 +9,32 @@ let isDarkenColorOn = false;
 const container = document.querySelector(".container");
 const gridSizedisplay = document.querySelector(".grid-size");
 const generateNewGridBtn = document.querySelector(".generate-new-grid-button");
-const modificationButtonsContainer = document.querySelector(
-  ".modification-buttons-container"
-);
-const randomColorBtn = modificationButtonsContainer.children[0];
-const darkenColorBtn = modificationButtonsContainer.children[1];
+const randomColorBtn = document.getElementById("random-color-button");
+const darkenColorBtn = document.getElementById("darken-color-button");
 
 // === Event Handlers ===
-darkenColorBtn.addEventListener("click", () => {
-  toggleDarkenBtn();
-});
 
-randomColorBtn.addEventListener("click", () => {
-  toggleRandomBtn();
-});
-
+// Event listener for creating default squares
 document.addEventListener("DOMContentLoaded", () => {
   createSquares(gridSize);
 });
 
+// Event listener for Random Colors btn
+randomColorBtn.addEventListener("click", () => {
+  toggleRandomBtn();
+});
+
+// Event listener for Darken Color btn
+darkenColorBtn.addEventListener("click", () => {
+  toggleDarkenBtn();
+});
+
+// Event listener for generating new squares btn
 generateNewGridBtn.addEventListener("click", () => {
   handleNewGrid();
 });
 
+// Event listener for squares container
 container.addEventListener("mouseover", (e) => {
   if (isDarkenColorOn) {
     darkenSquaresColors(e);
@@ -58,11 +61,12 @@ function createSquares(sqr) {
   gridSize = sqr;
 }
 
-function updatedGridDisplay() {
+// Func for updating current grid display on HTML
+function updateGridDisplay() {
   gridSizedisplay.textContent = `${gridSize}x${gridSize}`;
 }
 
-// Gets data to create new grid from user
+// Func for handling new grid
 function handleNewGrid() {
   let squaresPerSide;
 
@@ -80,55 +84,67 @@ function handleNewGrid() {
     }
   } while (isNaN(squaresPerSide) || squaresPerSide < 1 || squaresPerSide > 100);
 
-  container.replaceChildren();
+  container.replaceChildren(); // clear the container
 
   createSquares(squaresPerSide);
 
-  updatedGridDisplay();
+  updateGridDisplay();
 }
 
 function getRandomNum() {
   return Math.floor(Math.random() * 256);
 }
 
+// Func for toggling darken btn ON and OFF
 function toggleDarkenBtn() {
+  // Disable random btn if ON
   if (isRandomActive) {
     toggleRandomBtn();
   }
 
   isDarkenColorOn = !isDarkenColorOn;
   darkenColorBtn.style.backgroundColor = isDarkenColorOn
-    ? "rgb(252, 209, 171)"
-    : "rgb(255, 255, 255)";
+    ? darkenColorBtn.classList.toggle("active")
+    : darkenColorBtn.classList.toggle("active");
   darkenColorBtn.textContent = isDarkenColorOn
     ? "Darken Color: ON"
     : "Darken Color";
 
-  if (isDarkenColorOn) {
-    container.replaceChildren();
-    createSquares(gridSize);
+  removeFullBlackClass();
+}
+
+function removeFullBlackClass() {
+  if (isDarkenColorOn === false) {
+    document.querySelectorAll(".square").forEach((square) => {
+      square.classList.remove("full-black");
+    });
   }
 }
 
+// Func for toggling random colors btn ON and OFF
 function toggleRandomBtn() {
+  removeFullBlackClass();
+
+  // Disable darken btn if ON
   if (isDarkenColorOn) {
     toggleDarkenBtn();
   }
   isRandomActive = !isRandomActive;
   randomColorBtn.style.backgroundColor = isRandomActive
-    ? "rgb(252, 209, 171)"
-    : "rgb(255, 255, 255)";
+    ? randomColorBtn.classList.toggle("active")
+    : randomColorBtn.classList.toggle("active");
   randomColorBtn.textContent = isRandomActive
     ? "Random Colors: ON"
     : "Random Colors";
 }
 
+// Handler func for the default black
 function makeSquaresBlack(e) {
   if (!e.target.classList.contains("square")) return;
 
   e.target.style.backgroundColor = "rgb(0, 0, 0)";
 }
-
+// Handler func for generating random colours
 function randomizeSquareColors(e) {
   if (!e.target.classList.contains("square")) return;
 
@@ -137,19 +153,23 @@ function randomizeSquareColors(e) {
 
 function darkenSquaresColors(e) {
   let squareBackground = window.getComputedStyle(e.target).backgroundColor;
+  let alphaValue;
+  if (e.target.classList.contains("full-black")) return; // Check if completely back
 
-  if (squareBackground === "rgb(0, 0, 0)") return;
-  let alphaValue = squareBackground.slice(
+  if (squareBackground !== "rgba(0, 0, 0, 0)") {
+    e.target.style.backgroundColor = "rgba(0, 0, 0, 0)";
+  }
+
+  alphaValue = squareBackground.slice(
     squareBackground.lastIndexOf(",") + 2,
     -1
-  );
+  ); // Extract alpha value
 
-  alphaValue = parseFloat(alphaValue) + 0.1;
-  console.log(alphaValue);
-  alphaValue = Math.round(alphaValue * 10) / 10;
+  alphaValue = parseFloat(alphaValue) + 0.1; // Convert to decimal and add 0.1
+
+  if (alphaValue === 1) e.target.classList.toggle("full-black"); // Add marker if completely black
 
   e.target.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue})`;
-  console.log(alphaValue);
 
-  console.log(window.getComputedStyle(e.target).backgroundColor);
+  window.getComputedStyle(e.target).backgroundColor;
 }
